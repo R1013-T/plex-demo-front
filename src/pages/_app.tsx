@@ -3,6 +3,11 @@ import type { AppProps } from 'next/app'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { MantineProvider } from '@mantine/core'
+import { Notifications } from '@mantine/notifications'
+import useStore from '@/hooks/useStore'
+import { useSignedInStore } from '@/store/auth'
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -13,6 +18,18 @@ const queryClient = new QueryClient({
   },
 })
 export default function App({ Component, pageProps }: AppProps) {
+  const router = useRouter()
+  const signedInStore = useStore(useSignedInStore, (state) => state)
+
+  useEffect(() => {
+    if (signedInStore?.signedIn === undefined) return
+    if (signedInStore?.signedIn) {
+      router.push('/')
+    } else {
+      router.push('/auth')
+    }
+  }, [signedInStore?.signedIn])
+
   return (
     <QueryClientProvider client={queryClient}>
       <MantineProvider
@@ -41,13 +58,14 @@ export default function App({ Component, pageProps }: AppProps) {
                 root: {
                   ':hover': {
                     backgroundColor: '#A2B2EE',
-                  }
+                  },
                 },
-              }
-            }
+              },
+            },
           },
         }}
       >
+        <Notifications />
         <Component {...pageProps} />
       </MantineProvider>
       <ReactQueryDevtools />

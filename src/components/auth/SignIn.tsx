@@ -8,7 +8,7 @@ import {
   PasswordInput,
   TextInput,
 } from '@mantine/core'
-import { IconAt, IconKey, IconLogin } from '@tabler/icons-react'
+import { IconAt, IconKey, IconLogin, IconUserCheck } from '@tabler/icons-react'
 import { VscEye, VscEyeClosed } from 'react-icons/vsc'
 import { FiAlertOctagon } from 'react-icons/fi'
 import { useState } from 'react'
@@ -18,12 +18,16 @@ import { useRouter } from 'next/router'
 import useStore from '@/hooks/useStore'
 import { useSignedInStore, useUserStore } from '@/store/auth'
 import { useLoadingStore } from '@/store/common'
+import {
+  errorNotification,
+  successNotification,
+} from '@/utils/notifications/auth'
 
 const SignIn = () => {
   const router = useRouter()
 
   const signedStore = useStore(useSignedInStore, (state) => state)
-  const updateUser = useUserStore((state) => state.updateUser)
+  const user = useStore(useUserStore, (state) => state.user)
   const setLoading = useLoadingStore((state) => state.setLoading)
 
   const [error, setError] = useState('')
@@ -58,17 +62,34 @@ const SignIn = () => {
         Cookies.set('_uid', res.headers['uid'])
 
         signedStore?.setSignedIn(true)
-        updateUser(res.data.data)
 
-        router.push('/')
+        setTimeout(() => {
+          successNotification(
+            'Successfully logged in ✅',
+            `welcome back ${user?.name} !  You will be redirected to the dashboard`
+          )
+        }, 1)
+
       } else {
-        setError('An unexpected error has occurred.')
+        setError('An unexpected error has occurred 🚨')
+        errorNotification(
+          'An unexpected error has occurred 🚨',
+          'Please try again later.'
+        )
       }
     } catch (error: any) {
       if (error.response) {
-        setError(error.response.data.errors[0])
+        setError(`${error.response.data.errors[0]} 🧐`)
+        errorNotification(
+          `${error.response.data.errors[0]} 🧐`,
+          'Please try again.'
+        )
       } else {
-        setError('An unexpected error has occurred.')
+        setError('An unexpected error has occurred 🚨')
+        errorNotification(
+          'An unexpected error has occurred 🚨',
+          'Please try again later.'
+        )
       }
     }
 

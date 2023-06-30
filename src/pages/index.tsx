@@ -1,57 +1,55 @@
-import { useEffect } from "react";
-import useStore from "@/hooks/useStore";
-import { signOut } from "@/lib/api/auth";
-import Cookies from "js-cookie";
-import { useRouter } from "next/router";
-import { useQueryUser } from "@/hooks/user/useQueryUser";
-import { User } from "@/types/auth";
+import { useEffect } from 'react'
+import useStore from '@/hooks/useStore'
+import { signOut } from '@/lib/api/auth'
+import Cookies from 'js-cookie'
+import { useRouter } from 'next/router'
+import { useQueryUser } from '@/hooks/user/useQueryUser'
+import { User } from '@/types/auth'
+import {Loader, LoadingOverlay} from '@mantine/core'
+import { customLoader } from '@/utils/customLoader'
+import SignOutButton from "@/components/auth/SignOutButton";
+import {useSignedInStore, useUserStore} from "@/store/auth";
+import {useQueryClient} from "@tanstack/react-query";
 
 export default function Home() {
-  const router = useRouter();
+  const router = useRouter()
+  const queryClient = useQueryClient()
+  const updateUser = useUserStore((state) => state.updateUser)
+  const signedInStore = useStore(useSignedInStore, (state) => state)
 
-  const { data, status } = useQueryUser();
+  const { data:currentUser, status } = useQueryUser()
 
-  const handleLogout = async () => {
-    try {
-      const res = await signOut();
-
-      console.log("sign out res: ", res);
-
-      if (res.data.success) {
-        Cookies.remove("_access_token");
-        Cookies.remove("_client");
-        Cookies.remove("_uid");
-
-        // updateUser(undefined);
-
-        router.push("/auth");
-      } else {
-        console.log("error: ", res.data.errors);
-      }
-    } catch (error) {
-      console.log("error: ", error);
-    }
-  };
 
   useEffect(() => {
-    console.log("status: ", status);
-    console.log("data: ", data);
+    if (status != 'success') return
 
-    if (status === "success" && data?.isLogin === false) {
-      console.log("not login");
-      router.push("/auth");
+    if (currentUser?.isLogin === false) {
+      queryClient.removeQueries(['user'])
+      updateUser(undefined)
+      signedInStore?.setSignedIn(false)
+      Cookies.remove('_access_token')
+      Cookies.remove('_client')
+      Cookies.remove('_uid')
+    } else {
+      updateUser(currentUser.data)
     }
-  }, [data, status]);
 
-  if (status === "loading") {
-    return <div>loading...</div>;
-  }
+  }, [status])
 
   return (
     <main>
-      {data?.data?.name}
+      {status === 'loading' && (
+        <LoadingOverlay
+          visible={true}
+          overlayBlur={2}
+          loader={customLoader}
+          overlayOpacity={0.3}
+        />
+      )}
+
+      {currentUser?.data?.name}
       <br />
-      <button onClick={handleLogout}>logout</button>
+      <SignOutButton />
     </main>
-  );
+  )
 }

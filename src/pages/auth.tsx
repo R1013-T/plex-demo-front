@@ -1,9 +1,13 @@
 import SignIn from '@/components/auth/SignIn'
 import SignUp from '@/components/auth/SignUp'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Anchor, Group, LoadingOverlay, Paper } from '@mantine/core'
 import { useLoadingStore } from '@/store/common'
 import { customLoader } from '@/utils/customLoader'
+import { notifications } from '@mantine/notifications'
+import { IconUserCheck } from '@tabler/icons-react'
+import useStore from '@/hooks/useStore'
+import { useSignedInStore } from '@/store/auth'
 
 const Auth = () => {
   const loading = useLoadingStore((state) => state.loading)

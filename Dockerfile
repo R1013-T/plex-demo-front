@@ -11,7 +11,7 @@ ENV HOME=/${WORKDIR} \
 
 WORKDIR ${HOME}
 
-#COPY package*.json ./
-#RUN npm install
-#
-#COPY . ./
+COPY package*.json ./
+RUN npm install
+
+COPY . ./

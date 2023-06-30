@@ -25,12 +25,13 @@ import { useForm, yupResolver } from '@mantine/form'
 import { Role, SignUp } from '@/types/auth'
 import { signUp } from '@/lib/api/auth'
 import Cookies from 'js-cookie'
+import {errorNotification, successNotification} from '@/utils/notifications/auth'
 
 const SignUp = () => {
   const router = useRouter()
 
   const signedStore = useStore(useSignedInStore, (state) => state)
-  const updateUser = useUserStore((state) => state.updateUser)
+  const user = useStore(useUserStore, (state) => state.user)
   const setLoading = useLoadingStore((state) => state.setLoading)
 
   const [error, setError] = useState('')
@@ -83,27 +84,39 @@ const SignUp = () => {
         Cookies.set('_uid', res.headers['uid'])
 
         signedStore?.setSignedIn(true)
-        updateUser(res.data.data)
 
-        router.push('/')
+        setTimeout(() => {
+          successNotification(
+            'Successful account creation 🎉 ',
+            'Your account has been successfully created. You will be redirected to the dashboard.'
+          )
+        }, 1)
+
       } else {
-        setError('An unexpected error has occurred.')
+        setError('An unexpected error has occurred 🚨')
+        errorNotification(
+          'An unexpected error has occurred 🚨',
+          'Please try again later.'
+        )
       }
     } catch (error: any) {
       if (error.response) {
-        console.log('error.response', error.response)
         setError(error.response.data.errors.fullMessages[0])
+        errorNotification(
+          `${error.response.data.errors.fullMessages[0]} 🧐`,
+          'Please try again.'
+        )
       } else {
-        setError('An unexpected error has occurred.')
+        setError('An unexpected error has occurred 🚨')
+        errorNotification(
+          'An unexpected error has occurred 🚨',
+          'Please try again later.'
+        )
       }
     }
 
     setLoading(false)
   }
-
-  useEffect(() => {
-    console.log('error', error)
-  }, [error])
 
   return (
     <Container>
