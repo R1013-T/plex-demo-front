@@ -1,51 +1,56 @@
-import "@/styles/globals.css";
-import type { AppProps } from "next/app";
-import { useEffect } from "react";
-import {useRouter} from "next/router";
-import {getCurrentUser} from "@/lib/api/auth";
-import { useAuthStore } from "@/store/auth";
-import {useLoadingStore} from "@/store/common";
-import useStore from "@/hooks/useStore";
+import '@/styles/globals.css'
+import type { AppProps } from 'next/app'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { MantineProvider } from '@mantine/core'
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      refetchOnWindowFocus: false,
+    },
+  },
+})
 export default function App({ Component, pageProps }: AppProps) {
-  const router = useRouter();
-
-  const userStore = useStore(useAuthStore, (state) => state);
-  const setLoading = useLoadingStore((state) => state.setLoading);
-
-  const handleGetCurrentUser = async () => {
-    setLoading(true)
-
-    try {
-
-      const res = await getCurrentUser()
-      console.log("getCurrentUser res: ",res);
-
-      if (res?.data.isLogin) {
-        console.log("login");
-        userStore?.updateUser(res.data.data);
-        router.push("/");
-      } else {
-        console.log("not login");
-        router.push("/auth");
-      }
-
-    } catch (error) {
-      console.log("getCurrentUser error: ",error);
-      // router.push("/auth");
-    }
-
-    setLoading(false)
-  }
-
-  useEffect(() => {
-    console.log("user_: ",userStore?.user);
-    if (userStore?.user) {
-      router.push("/")
-    } else {
-      handleGetCurrentUser()
-    }
-  }, [userStore?.user]);
-
-  return <Component {...pageProps} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <MantineProvider
+        withGlobalStyles
+        withNormalizeCSS
+        theme={{
+          colorScheme: 'dark',
+          fontFamily: 'Roboto, ans-serif',
+          globalStyles: (theme) => ({
+            body: {
+              backgroundColor: '#26292B',
+            },
+          }),
+          components: {
+            Input: {
+              styles: (theme) => ({
+                input: {
+                  ':focus': {
+                    borderColor: '#5F7ADB',
+                  },
+                },
+              }),
+            },
+            Button: {
+              styles: {
+                root: {
+                  ':hover': {
+                    backgroundColor: '#A2B2EE',
+                  }
+                },
+              }
+            }
+          },
+        }}
+      >
+        <Component {...pageProps} />
+      </MantineProvider>
+      <ReactQueryDevtools />
+    </QueryClientProvider>
+  )
 }

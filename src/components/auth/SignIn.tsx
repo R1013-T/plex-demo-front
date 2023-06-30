@@ -1,95 +1,129 @@
-import React, { useState } from "react";
-import {useRouter} from "next/router";
-import Cookies from "js-cookie";
-import {signIn} from "@/lib/api/auth";
-
-import useStore from "@/hooks/useStore";
-import {useLoadingStore} from "@/store/common";
-import {useAuthStore} from "@/store/auth";
+import * as Yup from 'yup'
+import { useForm, yupResolver } from '@mantine/form'
+import { SignIn } from '@/types/auth'
+import {
+  Alert,
+  Button,
+  Container,
+  PasswordInput,
+  TextInput,
+} from '@mantine/core'
+import { IconAt, IconKey, IconLogin } from '@tabler/icons-react'
+import { VscEye, VscEyeClosed } from 'react-icons/vsc'
+import { FiAlertOctagon } from 'react-icons/fi'
+import { useState } from 'react'
+import { signIn } from '@/lib/api/auth'
+import Cookies from 'js-cookie'
+import { useRouter } from 'next/router'
+import useStore from '@/hooks/useStore'
+import { useSignedInStore, useUserStore } from '@/store/auth'
+import { useLoadingStore } from '@/store/common'
 
 const SignIn = () => {
-  const router = useRouter();
+  const router = useRouter()
 
-  const setLoading = useLoadingStore((state) => state.setLoading);
-  const userStore = useStore(useAuthStore, (state) => state);
+  const signedStore = useStore(useSignedInStore, (state) => state)
+  const updateUser = useUserStore((state) => state.updateUser)
+  const setLoading = useLoadingStore((state) => state.setLoading)
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [error, setError] = useState('')
 
-  const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const schema = Yup.object().shape({
+    email: Yup.string()
+      .email('Email Address is invalid.')
+      .required('Email Address is required.'),
+    password: Yup.string()
+      .min(8, 'Password must be at least 8 characters.')
+      .required('Password is required.'),
+  })
+
+  const form = useForm<SignIn>({
+    validate: yupResolver(schema),
+    initialValues: {
+      email: '',
+      password: '',
+    },
+  })
+
+  const handleSignIn = async () => {
+    setError('')
     setLoading(true)
 
-    const params = {
-      email,
-      password,
-    }
-
-    console.log("params: ",params);
-
     try {
-
-      const res = await signIn(params)
-      console.log("sign in res: ",res);
+      const res = await signIn(form.values)
 
       if (res.status === 200) {
+        Cookies.set('_access_token', res.headers['access-token'])
+        Cookies.set('_client', res.headers['client'])
+        Cookies.set('_uid', res.headers['uid'])
 
-        Cookies.set("_access_token", res.headers["access-token"])
-        Cookies.set("_client", res.headers["client"])
-        Cookies.set("_uid", res.headers["uid"])
+        signedStore?.setSignedIn(true)
+        updateUser(res.data.data)
 
-        console.log("res.data.data: ",res.data.data);
-
-        userStore?.updateUser(res.data.data);
-
-        console.log("login");
-
-        router.push("/");
-
-
+        router.push('/')
       } else {
-
-        console.log("not login");
-
+        setError('An unexpected error has occurred.')
       }
-
-
-
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      if (error.response) {
+        setError(error.response.data.errors[0])
+      } else {
+        setError('An unexpected error has occurred.')
+      }
     }
 
     setLoading(false)
-
-  };
+  }
 
   return (
-    <div>
-      <p>Sign In</p>
-
-      <form onSubmit={(e) => handleSubmit(e)} >
-        <label htmlFor="email">Email</label>
-        <input
-          type="text"
-          name="email"
+    <Container>
+      <h2 className="text-center text-2xl text-brand-primary">
+        Welcome back !
+      </h2>
+      {error && (
+        <Alert
+          my="md"
+          variant="filled"
+          icon={<FiAlertOctagon size={40} />}
+          title="Authorization Error"
+          color="red"
+          radius="md"
+        >
+          {error}
+        </Alert>
+      )}
+      <form onSubmit={form.onSubmit(handleSignIn)}>
+        <TextInput
+          mt="md"
           id="email"
-          className="block border"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          label="Email"
+          placeholder="Email Address"
+          icon={<IconAt size="0.8rem" />}
+          {...form.getInputProps('email')}
+          autoComplete="email"
         />
-        <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          name="password"
+        <PasswordInput
+          mt="md"
           id="password"
-          className="block border"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          label="Password"
+          placeholder="Password"
+          icon={<IconKey size="0.8rem" />}
+          visibilityToggleIcon={({ reveal }) =>
+            reveal ? <VscEye size={20} /> : <VscEyeClosed size={20} />
+          }
+          {...form.getInputProps('password')}
+          autoComplete="false"
         />
-        <button type="submit">ログイン</button>
+        <Button
+          type="submit"
+          leftIcon={<IconLogin size={20} />}
+          className="mt-10 w-full bg-brand-primary"
+        >
+          Login
+        </Button>
       </form>
-    </div>
-  );
-};
+    </Container>
+  )
+}
 
-export default SignIn;
+export default SignIn

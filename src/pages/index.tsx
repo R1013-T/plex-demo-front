@@ -1,53 +1,57 @@
-import {useAuthStore} from "@/store/auth";
-import {useEffect} from "react";
+import { useEffect } from "react";
 import useStore from "@/hooks/useStore";
-import {signOut} from "@/lib/api/auth";
+import { signOut } from "@/lib/api/auth";
 import Cookies from "js-cookie";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
+import { useQueryUser } from "@/hooks/user/useQueryUser";
+import { User } from "@/types/auth";
 
 export default function Home() {
-  const router = useRouter()
+  const router = useRouter();
 
-  const userStore = useStore(useAuthStore, (state) => state);
-
-  useEffect(() => {
-    console.log("user: ",userStore?.user);
-  }, []);
+  const { data, status } = useQueryUser();
 
   const handleLogout = async () => {
     try {
+      const res = await signOut();
 
-      const res = await signOut()
-
-      console.log("sign out res: ",res);
+      console.log("sign out res: ", res);
 
       if (res.data.success) {
-        Cookies.remove("_access_token")
-        Cookies.remove("_client")
-        Cookies.remove("_uid")
+        Cookies.remove("_access_token");
+        Cookies.remove("_client");
+        Cookies.remove("_uid");
 
-        userStore?.updateUser(undefined)
+        // updateUser(undefined);
 
-        router.push("/auth")
-
+        router.push("/auth");
       } else {
-        console.log("error: ",res.data.errors);
+        console.log("error: ", res.data.errors);
       }
-
-
     } catch (error) {
-      console.log("error: ",error);
+      console.log("error: ", error);
     }
+  };
+
+  useEffect(() => {
+    console.log("status: ", status);
+    console.log("data: ", data);
+
+    if (status === "success" && data?.isLogin === false) {
+      console.log("not login");
+      router.push("/auth");
+    }
+  }, [data, status]);
+
+  if (status === "loading") {
+    return <div>loading...</div>;
   }
 
   return (
     <main>
-      <p>
-        {userStore?.user?.name}
-        <br/>
-        {userStore?.user?.email}
-      </p>
-      <button onClick={handleLogout} >logout</button>
+      {data?.data?.name}
+      <br />
+      <button onClick={handleLogout}>logout</button>
     </main>
   );
 }
