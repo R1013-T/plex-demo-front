@@ -10,6 +10,7 @@ import { customLoader } from '@/utils/customLoader'
 import SignOutButton from "@/components/auth/SignOutButton";
 import {useSignedInStore, useUserStore} from "@/store/auth";
 import {useQueryClient} from "@tanstack/react-query";
+import Test from "@/components/Test";
 
 export default function Home() {
   const router = useRouter()
@@ -50,6 +51,7 @@ export default function Home() {
       {currentUser?.data?.name}
       <br />
       <SignOutButton />
+      <Test />
     </main>
   )
 }
