@@ -8,6 +8,7 @@ import useStore from '@/hooks/useStore'
 import { useSignedInStore } from '@/store/auth'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { useColorScheme } from '@mantine/hooks';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -19,6 +20,7 @@ const queryClient = new QueryClient({
 })
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
+  const colorScheme = useColorScheme()
   const signedInStore = useStore(useSignedInStore, (state) => state)
 
   useEffect(() => {
@@ -36,11 +38,11 @@ export default function App({ Component, pageProps }: AppProps) {
         withGlobalStyles
         withNormalizeCSS
         theme={{
-          colorScheme: 'dark',
+          colorScheme: colorScheme,
           fontFamily: 'Roboto, ans-serif',
           globalStyles: (theme) => ({
             body: {
-              backgroundColor: '#26292B',
+              backgroundColor: colorScheme === 'dark' ? '#26292B' : '#fefefe',
             },
           }),
           components: {
