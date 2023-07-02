@@ -12,6 +12,7 @@ export const signIn = (params: SignIn) => {
 };
 
 export const signOut = () => {
+  console.log('signOut')
   return client.delete("/auth/sign_out", {
     headers: {
       "access-token": Cookies.get("_access_token"),

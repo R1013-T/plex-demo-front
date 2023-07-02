@@ -25,6 +25,10 @@ export default function Home() {
     if (status != 'success') return
 
     if (currentUser?.isLogin === false) {
+
+      console.log('user', currentUser)
+      console.log('status', status)
+
       queryClient.removeQueries(['user'])
       updateUser(undefined)
       signedInStore?.setSignedIn(false)
