@@ -70,6 +70,26 @@ const Test = () => {
     }
   }
 
+  const handleCompany = async () => {
+
+    try {
+
+      const res = await client.get('/companies', {
+        headers: {
+          'access-token': Cookies.get('_access_token'),
+          client: Cookies.get('_client'),
+          uid: Cookies.get('_uid'),
+        },
+      })
+
+      console.log('res :', res)
+
+    } catch (e) {
+      console.log('e :', e)
+    }
+
+  }
+
   return (
     <div className="m-10">
       <button className="mb-10 block" onClick={handleGetNotes}>
@@ -80,6 +100,9 @@ const Test = () => {
       </button>
       <button className="mb-10 block" onClick={handleSearchNotes}>
         get search notes
+      </button>
+      <button className="mb-10 block" onClick={handleCompany}>
+        company
       </button>
     </div>
   )
