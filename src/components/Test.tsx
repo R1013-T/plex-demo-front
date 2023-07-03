@@ -45,19 +45,22 @@ const Test = () => {
       console.log('error :', error)
     }
   }
-
   const handleSearchNotes = async () => {
+    const matchType = 'and' // AND検索の場合は 'and' に変更
+    const searchParams = {
+      match: matchType,
+      queries: {
+        id_eq: 1,
+        // title_eq: 'title',
+        title_cont: 'title',
+        id_gteq: '5',
+        // 検索条件を追加
+      },
+    }
+
     try {
       const res = await client.get('/notes/search', {
-        params: {
-
-          title: 'title',
-
-          // and / or
-          m: 'and',
-          // eq / like
-          o: 'eq',
-        },
+        params: { q: searchParams },
         headers: {
           'access-token': Cookies.get('_access_token'),
           client: Cookies.get('_client'),
@@ -71,9 +74,7 @@ const Test = () => {
   }
 
   const handleCompany = async () => {
-
     try {
-
       const res = await client.get('/companies', {
         headers: {
           'access-token': Cookies.get('_access_token'),
@@ -83,13 +84,36 @@ const Test = () => {
       })
 
       console.log('res :', res)
-
     } catch (e) {
       console.log('e :', e)
     }
-
   }
 
+  const handleSearchCompanies = async () => {
+    const matchType = 'or' // AND検索の場合は 'and' に変更
+    const searchParams = {
+      match: matchType,
+      queries: {
+        id_eq: 1,
+        id_gteq: '5',
+        // 検索条件を追加
+      },
+    }
+
+    try {
+      const res = await client.get('/companies/search', {
+        params: { q: searchParams },
+        headers: {
+          'access-token': Cookies.get('_access_token'),
+          client: Cookies.get('_client'),
+          uid: Cookies.get('_uid'),
+        },
+      })
+      console.log('res :', res)
+    } catch (error) {
+      console.log('error :', error)
+    }
+  }
   return (
     <div className="m-10">
       <button className="mb-10 block" onClick={handleGetNotes}>
@@ -103,6 +127,9 @@ const Test = () => {
       </button>
       <button className="mb-10 block" onClick={handleCompany}>
         company
+      </button>
+      <button className="mb-10 block" onClick={handleSearchCompanies}>
+        get search company
       </button>
     </div>
   )

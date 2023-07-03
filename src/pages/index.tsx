@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import {useEffect, useState} from 'react'
 import useStore from '@/hooks/useStore'
 import { signOut } from '@/lib/api/auth'
 import Cookies from 'js-cookie'
@@ -19,7 +19,6 @@ export default function Home() {
   const signedInStore = useStore(useSignedInStore, (state) => state)
 
   const { data:currentUser, status } = useQueryUser()
-
 
   useEffect(() => {
     if (status != 'success') return
