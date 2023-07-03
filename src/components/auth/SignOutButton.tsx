@@ -1,12 +1,12 @@
 import React from 'react'
-import { Button } from '@mantine/core'
+import { Center, Tooltip } from '@mantine/core'
 import { signOut } from '@/lib/api/auth'
-import { useRouter } from 'next/router'
 import { useSignedInStore, useUserStore } from '@/store/auth'
 import { useQueryClient } from '@tanstack/react-query'
 import { successNotification } from '@/utils/notifications/auth'
 import useStore from '@/hooks/useStore'
 import Cookies from 'js-cookie'
+import {IconLogout} from "@tabler/icons-react";
 
 const SignOutButton = () => {
   const queryClient = useQueryClient()
@@ -37,7 +37,13 @@ const SignOutButton = () => {
     Cookies.remove('_uid')
   }
 
-  return <Button onClick={handleLogout}>Sign Out</Button>
+  return (
+    <Tooltip label='Logout' position="right" transitionProps={{ duration: 0 }} className='mb-2 cursor-pointer' >
+      <Center onClick={handleLogout} >
+        <IconLogout size="1.3rem" stroke={1.5} />
+      </Center>
+    </Tooltip>
+  )
 }
 
-export default SignOutButton;
+export default SignOutButton

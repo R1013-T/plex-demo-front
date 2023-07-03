@@ -70,7 +70,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <Notifications />
         <Component {...pageProps} />
       </MantineProvider>
-      <ReactQueryDevtools />
+      <ReactQueryDevtools position='bottom-right' />
     </QueryClientProvider>
   )
 }

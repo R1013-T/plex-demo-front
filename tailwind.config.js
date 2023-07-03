@@ -5,6 +5,7 @@ module.exports = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  darkMode: 'media',
   theme: {
     extend: {
       backgroundImage: {
@@ -13,11 +14,18 @@ module.exports = {
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
       colors: {
+        'bk': '#333333',
+        'wh': '#C1C2C5',
         'brand-primary': '#5F7ADB',
         'brand-secondary': '#A2B2EE',
-        'bg-primary': '#26292B',
-        'bg-secondary': '#2E3239',
+        'bg-light-primary': '#FFF',
+        'bg-light-secondary': '#F7F7F7',
+        'bg-dark-primary': '#26292B',
+        'bg-dark-secondary': '#2E3239',
       },
+      height: {
+        'screen-main': 'calc(100dvh - 28px)',
+      }
     },
   },
   plugins: [],
