@@ -10,13 +10,13 @@ const Main = () => {
   const activePageStore = useStore(useActivePageStore, (state) => state)
 
   return (
-    <article>
+    <div className='w-full' >
       {activePageStore?.activePage === 'Dashboard' && <Dashboard />}
       {activePageStore?.activePage === 'Charts' && <Charts />}
       {activePageStore?.activePage === 'Notes' && <Notes />}
       {activePageStore?.activePage === 'Users' && <Users />}
       {activePageStore?.activePage === 'Settings' && <Settings />}
-    </article>
+    </div>
   )
 }
 

@@ -11,6 +11,10 @@ type ActivePageStore = {
   setActivePage: (activePage: string) => void;
 }
 
+type SettingsActivePageStore = {
+  settingsActivePage: string;
+  setSettingsActivePage: (settingsActivePage: string) => void;
+}
 export const useLoadingStore = create<LoadingStore>((set) => ({
   loading: false,
   setLoading: (loading: boolean) => set({ loading }),
@@ -24,6 +28,18 @@ export const useActivePageStore = create(
     }),
     {
       name: "active-page"
+    }
+  )
+);
+
+export const useSettingsActivePageStore = create(
+  persist<SettingsActivePageStore>(
+    (set) => ({
+      settingsActivePage: "Account",
+      setSettingsActivePage: (settingsActivePage: string) => set({ settingsActivePage }),
+    }),
+    {
+      name: "settings-active-page"
     }
   )
 );

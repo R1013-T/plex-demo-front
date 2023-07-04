@@ -10,15 +10,15 @@ type Props = {
 
 export const Layout: FC<Props> = ({ children, title }) => {
   return (
-    <div className="min-h-screen overflow-hidden">
+    <article className="min-h-screen overflow-hidden w-full">
       <Head>
         <title>{title ? title + " - Mantine" : title}</title>
       </Head>
       <Header />
-      <main className='flex' >
+      <main className='flex w-full' >
         <Nav />
         {children}
       </main>
-    </div>
+    </article>
   )
 }
