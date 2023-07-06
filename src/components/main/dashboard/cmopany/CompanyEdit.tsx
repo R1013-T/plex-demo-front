@@ -1,11 +1,11 @@
 import React from 'react';
 
-const MyComponent = () => {
+const CompanyEdit = () => {
   return (
     <div>
-      
+      <p>company edit</p>
     </div>
   );
 };
 
-export default MyComponent;
+export default CompanyEdit;
