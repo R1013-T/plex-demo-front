@@ -39,7 +39,7 @@ export default function App({ Component, pageProps }: AppProps) {
         withNormalizeCSS
         theme={{
           colorScheme: colorScheme,
-          fontFamily: 'Roboto, ans-serif',
+          fontFamily: 'Noto Sans, Noto Sans JP, sans-serif',
           globalStyles: (theme) => ({
             body: {
               backgroundColor: colorScheme === 'dark' ? '#26292B' : '#fefefe',

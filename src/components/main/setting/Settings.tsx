@@ -16,6 +16,7 @@ const Settings = () => {
       {settingsStore?.settingsActivePage === 'Account' && <Account />}
       {settingsStore?.settingsActivePage === 'Display' && <Display />}
       {settingsStore?.settingsActivePage === 'Help' && <Help />}
+      {}
 
     </section>
   );

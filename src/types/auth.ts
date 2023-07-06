@@ -1,5 +1,3 @@
-import { enumUtil } from 'zod/lib/helpers/enumUtil'
-
 export type SignUp = {
   name: string
   email: string

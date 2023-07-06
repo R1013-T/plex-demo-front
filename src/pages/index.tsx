@@ -1,16 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import useStore from '@/hooks/useStore'
-import { signOut } from '@/lib/api/auth'
 import Cookies from 'js-cookie'
-import { useRouter } from 'next/router'
-import { useQueryUser } from '@/hooks/user/useQueryUser'
-import { User } from '@/types/auth'
-import { Loader, LoadingOverlay } from '@mantine/core'
+import { useQueryUser } from '@/utils/user/useQueryUser'
+import { LoadingOverlay } from '@mantine/core'
 import { customLoader } from '@/utils/customLoader'
-import SignOutButton from '@/components/auth/SignOutButton'
 import { useSignedInStore, useUserStore } from '@/store/auth'
 import { useQueryClient } from '@tanstack/react-query'
-import Test from '@/components/Test'
 import { Layout } from '@/components/layouts/Layout'
 import NotAuthorized from '@/components/common/NotAuthorized'
 import Main from '@/components/main/Main'
@@ -27,9 +22,9 @@ export default function Home() {
     if (status != 'success') return
 
     if (currentUser?.isLogin === false) {
-      queryClient.removeQueries(['user'])
       updateUser(undefined)
       signedInStore?.setSignedIn(false)
+      queryClient.removeQueries(['user'])
       Cookies.remove('_access_token')
       Cookies.remove('_client')
       Cookies.remove('_uid')

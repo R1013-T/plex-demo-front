@@ -21,7 +21,7 @@ export const useQueryUser = () => {
       return;
     }
 
-    const { data } = await client.get("/auth/sessions", {
+    const { data, headers } = await client.get("/auth/sessions", {
       headers: {
         "access-token": Cookies.get("_access_token"),
         client: Cookies.get("_client"),
@@ -37,6 +37,7 @@ export const useQueryUser = () => {
     queryFn: getCurrentUser,
     onError: (error: any) => {
       if (error.response?.status === 401 || error.response?.status === 403) {
+
         signedInStore?.setSignedIn(false);
       }
     },

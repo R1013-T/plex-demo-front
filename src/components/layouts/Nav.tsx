@@ -1,7 +1,7 @@
 import React from 'react'
 import { Navbar, Center, Tooltip, Stack } from '@mantine/core'
 import Image from 'next/image'
-import {IconArticle, IconChartBar, IconNotes, IconSettings, IconUsersGroup} from '@tabler/icons-react'
+import {IconArticle, IconChartBar, IconNotes, IconSettings, IconTrash, IconUsersGroup} from '@tabler/icons-react'
 import useStore from '@/hooks/useStore'
 import { useActivePageStore } from '@/store/common'
 import SignOutButton from '@/components/auth/SignOutButton'
@@ -37,6 +37,7 @@ const Nav = () => {
     { icon: IconChartBar, label: 'Charts' },
     { icon: IconNotes, label: 'Notes' },
     { icon: IconUsersGroup, label: 'Users' },
+    { icon: IconTrash, label: 'Trash'},
     { icon: IconSettings, label: 'Settings' },
   ]
 

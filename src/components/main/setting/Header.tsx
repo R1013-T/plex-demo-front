@@ -12,7 +12,7 @@ const Header = () => {
       key={index}
       className={` mx-3 my-2 rounded px-2 py-1.5 text-sm font-medium tracking-wider ${
         settingsStore?.settingsActivePage === item &&
-        'bg-brand-primary/30 text-white'
+        'bg-brand-primary/50 text-white'
       }`}
       onClick={() => settingsStore?.setSettingsActivePage(item)}
     >
@@ -21,7 +21,7 @@ const Header = () => {
   ))
 
   return (
-    <section className="w-full shadow-2xl">
+    <section className="h-12 w-full shadow-2xl">
       <Group spacing={0} position="left" className="w-full p-0">
         {settingItems}
       </Group>
