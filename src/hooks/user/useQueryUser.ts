@@ -37,7 +37,6 @@ export const useQueryUser = () => {
     queryFn: getCurrentUser,
     onError: (error: any) => {
       if (error.response?.status === 401 || error.response?.status === 403) {
-
         signedInStore?.setSignedIn(false);
       }
     },

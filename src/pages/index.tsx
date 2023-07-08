@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import useStore from '@/hooks/useStore'
 import Cookies from 'js-cookie'
-import { useQueryUser } from '@/utils/user/useQueryUser'
+import { useQueryUser } from '@/hooks/user/useQueryUser'
 import { LoadingOverlay } from '@mantine/core'
 import { customLoader } from '@/utils/customLoader'
 import { useSignedInStore, useUserStore } from '@/store/auth'

@@ -1,26 +1,24 @@
 import React from 'react'
-import { Center, Grid, Group } from '@mantine/core'
-import {
-  IconArrowLeft,
-  IconEdit,
-  IconRefresh,
-  IconTrash,
-} from '@tabler/icons-react'
-import {Company} from "@/types/company";
+import { Button, Container, Grid, Group, Modal, Text } from '@mantine/core'
+import { IconArrowLeft, IconEdit, IconTrash } from '@tabler/icons-react'
+import { useDisclosure } from '@mantine/hooks'
 
 type Props = {
   isEdit: boolean
   setIsEdit: (isEdit: boolean) => void
-  setDetailId: (id: number ) => void
-  currentCompany: Company
+  setDetailId: (id: number) => void
 }
 const CompanyHeader = (props: Props) => {
+  const [opened, { open, close }] = useDisclosure(false)
+
   const handleTrash = () => {
-    console.log('trash')
+    open()
   }
 
-  const handleRefresh = () => {
-    console.log('refresh')
+  const handleMoveTrash = () => {
+    alert('Under development')
+    props.setDetailId(0)
+    close()
   }
 
   const handleEdit = () => {
@@ -29,13 +27,22 @@ const CompanyHeader = (props: Props) => {
 
   const headerItems = [
     { icon: IconTrash, click: handleTrash, active: false },
-    { icon: IconRefresh, click: handleRefresh, active: false },
     { icon: IconEdit, click: handleEdit, active: props.isEdit },
   ]
 
-
   return (
     <section className="h-12 w-full shadow-2xl">
+      <Modal opened={opened} onClose={close} title="Move to Trash" centered>
+        <Container>
+          <Text>
+            Are you sure you want to move the selected data to the trash?
+          </Text>
+          <Button color="red" className="mt-3 w-full p-0 hover:bg-red-400" onClick={handleMoveTrash} >
+            Move to Trash
+          </Button>
+        </Container>
+      </Modal>
+
       <Grid m={0}>
         <Grid.Col span={6} className="p-0">
           <Group spacing={0} position="left" className="h-12 w-full pl-2">
@@ -44,10 +51,6 @@ const CompanyHeader = (props: Props) => {
               stroke={1.3}
               onClick={() => props.setDetailId(0)}
             />
-            <ruby className='pl-1 tracking-wider' >
-              {props.currentCompany.name}
-              <rt>{props.currentCompany.nameKana}</rt>
-            </ruby>
           </Group>
         </Grid.Col>
         <Grid.Col span={6} className="p-0">

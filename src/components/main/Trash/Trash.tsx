@@ -1,11 +1,12 @@
-import React from 'react';
+import React from 'react'
+import { Center, Text } from '@mantine/core'
 
 const Trash = () => {
   return (
-    <div>
-      <p>trash</p>
-    </div>
-  );
-};
+    <Center className="h-screen-main">
+      <Text>Under development 🥲</Text>
+    </Center>
+  )
+}
 
-export default Trash;
+export default Trash

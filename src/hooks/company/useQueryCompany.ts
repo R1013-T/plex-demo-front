@@ -3,15 +3,19 @@ import Cookies from "js-cookie";
 import {useQuery, useQueryClient} from "@tanstack/react-query";
 import useStore from "@/hooks/useStore";
 import {useSignedInStore, useUserStore} from "@/store/auth";
-import {CompaniesResponse, Company} from "@/types/company";
+import {CompaniesResponse, CompanyResponse} from "@/types/company";
+import {useCurrentCompanyStore} from "@/store/Companies";
 
-export const useQueryCompanies = () => {
+export const useQueryCompany = (id:number) => {
   const queryClient = useQueryClient()
   const updateUser = useUserStore((state) => state.updateUser)
   const signedInStore = useStore(useSignedInStore, (state) => state);
+  const setCurrentCompany = useCurrentCompanyStore(
+    (state) => state.setCurrentCompany
+  )
 
-  const getCompanies = async () => {
-    const { data, headers } = await client.get("/companies", {
+  const getCompany = async () => {
+    const { data, headers } = await client.get(`/companies/${id}`, {
       headers: {
         "access-token": Cookies.get("_access_token"),
         client: Cookies.get("_client"),
@@ -22,9 +26,12 @@ export const useQueryCompanies = () => {
     return data;
   }
 
-  return useQuery<CompaniesResponse, Error>({
-    queryKey: ["companies"],
-    queryFn: getCompanies,
+  return useQuery<CompanyResponse, Error>({
+    queryKey: ['company', id],
+    queryFn: getCompany,
+    onSuccess: (data) => {
+      setCurrentCompany(data)
+    },
     onError: (error: any) => {
       if (error.response?.status === 401) {
         updateUser(undefined)

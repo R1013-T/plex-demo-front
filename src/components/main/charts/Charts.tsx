@@ -1,11 +1,11 @@
-import React from 'react';
+import { Center, Text } from '@mantine/core'
 
 const Charts = () => {
   return (
-    <div>
-      <p>charts</p>
-    </div>
-  );
-};
+    <Center className='h-screen-main' >
+      <Text>Under development 🥲</Text>
+    </Center>
+  )
+}
 
-export default Charts;
+export default Charts

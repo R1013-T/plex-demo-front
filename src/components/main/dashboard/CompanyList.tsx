@@ -3,10 +3,15 @@ import { keys } from '@mantine/utils'
 import { createStyles, rem, ScrollArea, Table } from '@mantine/core'
 import { Company, DisplayCompaniesColumns } from '@/types/company'
 import useStore from '@/hooks/useStore'
-import { useDisplayCompaniesColumnsStore } from '@/store/Companies'
+import {
+  useCompaniesStore,
+  useDisplayCompaniesColumnsStore,
+  useIsUpdatedCompanyStore,
+} from '@/store/Companies'
+import { useRouter } from 'next/router'
+import { useQueryClient } from '@tanstack/react-query'
 
 type Props = {
-  companies: Company[]
   setDetailId: (id: number) => void
 }
 
@@ -37,10 +42,14 @@ const useStyles = createStyles((theme) => ({
   },
 }))
 const CompanyList = (props: Props) => {
+  const router = useRouter()
+  const queryClient = useQueryClient()
   const displayColumns = useStore(
     useDisplayCompaniesColumnsStore,
     (state) => state
   )
+  const companies = useCompaniesStore((state) => state.companies)
+  const isUpdatedCompany = useIsUpdatedCompanyStore((state) => state)
 
   const { classes, cx } = useStyles()
   const [scrolled, setScrolled] = useState(false)
@@ -53,18 +62,19 @@ const CompanyList = (props: Props) => {
     const display = displayColumns?.displayCompaniesColumns
     if (!display) return
 
-    const displayParams = props.companies.map((company) => {
+    if (isUpdatedCompany?.isUpdatedCompany || !companies) {
+      queryClient.invalidateQueries(['companies'])
+      isUpdatedCompany?.setIsUpdatedCompany(false)
+      return
+    }
+
+    const displayParams = companies.map((company) => {
       const currentCompany: DisplayCompaniesColumns = {}
       const companyKeys = Object.keys(company) as (keyof Company)[]
       for (let key of companyKeys) {
         if (display.includes(key)) {
           if (key === 'listingStatus') {
             currentCompany[key] = company[key] ? '上場' : '未上場'
-          } else if (
-            ['createdAt', 'updatedAt'].includes(key) &&
-            company[key] instanceof Date
-          ) {
-            currentCompany[key] = company[key].toLocaleString()
           } else if (typeof company[key] === 'number') {
             currentCompany[key] = company[key].toString()
           } else {
@@ -76,12 +86,16 @@ const CompanyList = (props: Props) => {
     })
 
     setDisplayParams(displayParams)
-  }, [displayColumns?.displayCompaniesColumns, props.companies])
+  }, [
+    displayColumns?.displayCompaniesColumns,
+    companies,
+    isUpdatedCompany?.isUpdatedCompany,
+  ])
 
   const labels = keys(displayParams[0] || '')
 
   const rows = displayParams.map((row, index) => (
-    <tr key={index} onClick={() => props.setDetailId(props.companies[index].id)}>
+    <tr key={index} onClick={() => props.setDetailId(companies![index].id)}>
       {Object.values(row).map((value, index) => (
         <td key={index}>{value}</td>
       ))}

@@ -1,10 +1,11 @@
 import React from 'react';
+import {Center, Text} from "@mantine/core";
 
 const Notes = () => {
   return (
-    <div>
-      <p>notes</p>
-    </div>
+    <Center className='h-screen-main' >
+      <Text>Under development 🥲</Text>
+    </Center>
   );
 };
 

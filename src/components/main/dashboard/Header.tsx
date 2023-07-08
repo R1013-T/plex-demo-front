@@ -19,10 +19,15 @@ import {
   IconSearch,
 } from '@tabler/icons-react'
 import { PiFileCsvDuotone } from 'react-icons/pi'
-import DisplayColumns from '@/components/main/dashboard/DisplayColumns'
-import Filter from '@/components/main/dashboard/Filter'
+import DisplayColumns from '@/components/main/dashboard/modal/DisplayColumns'
+import Filter from '@/components/main/dashboard/modal/Filter'
+import { useQueryClient } from '@tanstack/react-query'
+import {successDatabaseNotification} from "@/utils/notifications/db";
+import InsertRow from './modal/InsertRow'
 
 const Header = () => {
+  const queryClient = useQueryClient()
+
   const [opened, { open, close }] = useDisclosure(false)
   const [modalState, setModalState] = useState('')
   const [modalTitle, setModalTitle] = useState('')
@@ -38,11 +43,15 @@ const Header = () => {
   }
 
   const handleRefresh = () => {
-    alert('refresh')
+    queryClient.invalidateQueries(['companies']).then(() => {
+      successDatabaseNotification("Successful Data Retrieval ✅", "The company data has been successfully retrieved. ")
+    })
   }
 
   const handleInsertRow = () => {
-    alert('insert row')
+    setModalState('InsertRow')
+    setModalTitle('Insert Row')
+    open()
   }
 
   const handleImportCsvData = () => {
@@ -51,10 +60,11 @@ const Header = () => {
 
   return (
     <div className="min-h-[3rem] w-full overflow-hidden shadow-2xl">
-      <Modal opened={opened} onClose={close} title={modalTitle} centered>
+      <Modal opened={opened} onClose={close} title={modalTitle} size="calc(100vw - 3rem)" centered>
         <Container>
           {modalState === 'displayColumns' && <DisplayColumns />}
           {modalState === 'filter' && <Filter />}
+          {modalState === 'InsertRow' && <InsertRow close={close} />}
         </Container>
       </Modal>
       <Grid m={0}>
@@ -64,8 +74,6 @@ const Header = () => {
               placeholder="Search by any field"
               icon={<IconSearch size="0.9rem" stroke={1.5} />}
               className="m-0 mx-2 w-full"
-              // value={search}
-              // onChange={handleSearchChange}
             />
           </Center>
         </Grid.Col>

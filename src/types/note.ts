@@ -4,6 +4,6 @@ export type Note = {
   content: string;
   userId: number;
   companyId: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }

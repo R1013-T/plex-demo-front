@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import CompanyEdit from '@/components/main/dashboard/cmopany/CompanyEdit'
 import CompanyDetail from '@/components/main/dashboard/cmopany/CompanyDetail'
 import CompanyHeader from '@/components/main/dashboard/cmopany/CompanyHeader'
-import { useQueryCompany } from '@/utils/company/useQueryCompany'
+import { useQueryCompany } from '@/hooks/company/useQueryCompany'
 import { LoadingOverlay } from '@mantine/core'
+import { useCurrentCompanyStore } from '@/store/Companies'
 
 type Props = {
   id: number
@@ -12,6 +13,9 @@ type Props = {
 
 const Company = (props: Props) => {
   const { data, status, error } = useQueryCompany(props.id)
+  const setCurrentCompany = useCurrentCompanyStore(
+    (state) => state.setCurrentCompany
+  )
 
   const [isEdit, setIsEdit] = useState(false)
 
@@ -30,9 +34,15 @@ const Company = (props: Props) => {
             isEdit={isEdit}
             setIsEdit={setIsEdit}
             setDetailId={props.setDetailId}
-            currentCompany={data.company}
           />
-          {isEdit ? <CompanyEdit /> : <CompanyDetail data={data} />}
+          {isEdit ? (
+            <CompanyEdit
+              setIsEdit={setIsEdit}
+              setDetailId={props.setDetailId}
+            />
+          ) : (
+            <CompanyDetail />
+          )}
         </>
       )}
     </div>
