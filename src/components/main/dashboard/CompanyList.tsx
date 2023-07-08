@@ -42,7 +42,6 @@ const useStyles = createStyles((theme) => ({
   },
 }))
 const CompanyList = (props: Props) => {
-  const router = useRouter()
   const queryClient = useQueryClient()
   const displayColumns = useStore(
     useDisplayCompaniesColumnsStore,

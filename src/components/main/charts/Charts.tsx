@@ -1,4 +1,5 @@
 import { Center, Text } from '@mantine/core'
+import Test from "@/components/Test";
 
 const Charts = () => {
   return (

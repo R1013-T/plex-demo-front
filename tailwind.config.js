@@ -26,6 +26,8 @@ module.exports = {
       height: {
         'screen-main': 'calc(100dvh - 28px)',
         'screen-main-inner': 'calc(100dvh - 28px - 50px)',
+        'modal': 'calc(100dvh - 300px)',
+        'modal-inner': 'calc(100dvh - 300px - 50px)',
       },
       width: {
         'screen-main': 'calc(100dvw - 80px)',

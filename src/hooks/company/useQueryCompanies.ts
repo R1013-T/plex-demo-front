@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import useStore from '@/hooks/useStore'
 import { useSignedInStore, useUserStore } from '@/store/auth'
 import { CompaniesResponse, Company } from '@/types/company'
-import { useCompaniesStore } from '@/store/Companies'
+import { useCompaniesStore, useSearchCompaniesStore } from '@/store/Companies'
 import { errorDatabaseNotification } from '@/utils/notifications/db'
 
 export const useQueryCompanies = () => {
@@ -12,9 +12,27 @@ export const useQueryCompanies = () => {
   const updateUser = useUserStore((state) => state.updateUser)
   const signedInStore = useStore(useSignedInStore, (state) => state)
   const setCompanies = useCompaniesStore((state) => state.setCompanies)
+  const searchCompaniesParams = useSearchCompaniesStore(
+    (state) => state.searchCompaniesParams
+  )
 
   const getCompanies = async () => {
-    const { data, headers } = await client.get('/companies', {
+    // const matchType = 'or' // AND検索の場合は 'and' に変更
+    // const searchParams = {
+    //   // match: matchType,
+    //   // queries: {
+    //   //   id_eq: 1,
+    //   //   id_gteq: '5',
+    //   //   // 検索条件を追加
+    //   // },
+    //   match: "and",
+    //   queries: {
+    //     id_gteq: 5,
+    //   }
+    // }
+
+    const { data, headers } = await client.get('/companies/search', {
+      params: { q: searchCompaniesParams },
       headers: {
         'access-token': Cookies.get('_access_token'),
         client: Cookies.get('_client'),
@@ -29,6 +47,7 @@ export const useQueryCompanies = () => {
     queryKey: ['companies'],
     queryFn: getCompanies,
     onSuccess: (data) => {
+      console.log('companies', data.data)
       setCompanies(data.data)
     },
     onError: (error: any) => {

@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { Company, CompanyResponse } from '@/types/company'
+import {Company, CompanyResponse, SearchCompaniesParams, SearchParams} from '@/types/company'
 
 type CompaniesStore = {
   companies: Company[] | null
@@ -20,6 +20,11 @@ type CurrentCompanyStore = {
 type isUpdatedCompanyStore = {
   isUpdatedCompany: boolean
   setIsUpdatedCompany: (isUpdatedCompany: boolean) => void
+}
+
+type SearchCompaniesParamsStore = {
+  searchCompaniesParams: SearchParams | null
+  setSearchCompaniesParams: (searchCompaniesParams: SearchParams) => void
 }
 
 export const useCompaniesStore = create<CompaniesStore>((set) => ({
@@ -66,3 +71,12 @@ export const useIsUpdatedCompanyStore = create<isUpdatedCompanyStore>(
       set({ isUpdatedCompany }),
   })
 )
+
+export const useSearchCompaniesStore = create<SearchCompaniesParamsStore>((set) => ({
+  searchCompaniesParams: {
+    match: "and",
+    queries: {}
+  },
+  setSearchCompaniesParams: (searchCompaniesParams: SearchParams) =>
+    set({ searchCompaniesParams }),
+}))

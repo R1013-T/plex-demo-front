@@ -22,7 +22,7 @@ import { PiFileCsvDuotone } from 'react-icons/pi'
 import DisplayColumns from '@/components/main/dashboard/modal/DisplayColumns'
 import Filter from '@/components/main/dashboard/modal/Filter'
 import { useQueryClient } from '@tanstack/react-query'
-import {successDatabaseNotification} from "@/utils/notifications/db";
+import { successDatabaseNotification } from '@/utils/notifications/db'
 import InsertRow from './modal/InsertRow'
 
 const Header = () => {
@@ -44,7 +44,10 @@ const Header = () => {
 
   const handleRefresh = () => {
     queryClient.invalidateQueries(['companies']).then(() => {
-      successDatabaseNotification("Successful Data Retrieval ✅", "The company data has been successfully retrieved. ")
+      successDatabaseNotification(
+        'Successful Data Retrieval ✅',
+        'The company data has been successfully retrieved. '
+      )
     })
   }
 
@@ -60,10 +63,16 @@ const Header = () => {
 
   return (
     <div className="min-h-[3rem] w-full overflow-hidden shadow-2xl">
-      <Modal opened={opened} onClose={close} title={modalTitle} size="calc(100vw - 3rem)" centered>
+      <Modal
+        opened={opened}
+        onClose={close}
+        title={modalTitle}
+        size="calc(100vw - 3rem)"
+        centered
+      >
         <Container>
           {modalState === 'displayColumns' && <DisplayColumns />}
-          {modalState === 'filter' && <Filter />}
+          {modalState === 'filter' && <Filter close={close} />}
           {modalState === 'InsertRow' && <InsertRow close={close} />}
         </Container>
       </Modal>

@@ -3,7 +3,7 @@ import { Navbar, Center, Tooltip, Stack } from '@mantine/core'
 import Image from 'next/image'
 import {IconArticle, IconChartBar, IconNotes, IconSettings, IconTrash, IconUsersGroup} from '@tabler/icons-react'
 import useStore from '@/hooks/useStore'
-import { useActivePageStore } from '@/store/common'
+import {useActivePageStore, useLoadingStore} from '@/store/common'
 import SignOutButton from '@/components/auth/SignOutButton'
 
 interface NavbarLinkProps {
@@ -15,6 +15,7 @@ interface NavbarLinkProps {
 
 const Nav = () => {
   const activePageStore = useStore(useActivePageStore, (state) => state)
+  const loading = useLoadingStore((state) => state.loading)
 
   function NavbarItem({ icon: Icon, label, onClick }: NavbarLinkProps) {
     return (
@@ -56,6 +57,7 @@ const Nav = () => {
             alt="logo"
             width={30}
             height={30}
+            className={`${loading && 'animate-spin'}`}
           />
         </Center>
         <Navbar.Section grow mt={50}>
