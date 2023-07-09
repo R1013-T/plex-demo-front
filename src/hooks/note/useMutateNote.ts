@@ -4,7 +4,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import Cookies from 'js-cookie'
 import client from '@/lib/api/client'
 import { Note } from '@/types/note'
-import {errorDatabaseNotification, successDatabaseNotification} from '@/utils/notifications/db'
+import {
+  errorDatabaseNotification,
+  successDatabaseNotification,
+} from '@/utils/notifications/db'
+import {Company} from "@/types/company";
 
 export const useMutateNote = () => {
   const signedInStore = useStore(useSignedInStore, (state) => state)
@@ -50,5 +54,40 @@ export const useMutateNote = () => {
     }
   )
 
-  return { createNoteMutation }
+  const updateNoteMutation = useMutation(
+    async (
+      note: Omit<Note, 'createdAt' | 'updatedAt' | 'userId' | 'companyId'>
+    ) => {
+      const res = await client.patch(`/notes/${note.id}`, note, config)
+      return res.data.data
+    },
+    {
+      onSuccess: (res, variables) => {
+        const previousNotes = QueryClient.getQueryData<any>(['notes'])
+        if (previousNotes) {
+          QueryClient.setQueriesData<Company[]>(
+            ['companies'],
+            previousNotes.map((company: Company) =>
+              company.id === variables.id ? res : company
+            )
+          )
+        }
+        successDatabaseNotification(
+          'Data Update Successful ✅',
+          'The data has been successfully updated. The changes you made have been saved successfully.'
+        )
+      },
+      onError: (error: any) => {
+        if (error.response.status === 401) {
+          signedInStore?.setSignedIn(false)
+        }
+        errorDatabaseNotification(
+          'Data Update Failed ❌',
+          'Failed to update the data. Please try again later or contact support for assistance.'
+        )
+      },
+    }
+  )
+
+  return { createNoteMutation, updateNoteMutation }
 }
