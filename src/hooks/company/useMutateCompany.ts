@@ -36,8 +36,8 @@ export const useMutateCompany = () => {
           )
         }
         successDatabaseNotification(
-          'Title: Data Addition Successful ✅',
-          'The data has been successfully added. The changes you made have been saved successfully.'
+          'Company Addition Successful ✅',
+          'The company data has been successfully added. The changes you made have been saved successfully.'
         )
       },
       onError: (error: any) => {
@@ -45,7 +45,7 @@ export const useMutateCompany = () => {
           signedInStore?.setSignedIn(false)
         }
         errorDatabaseNotification(
-          'Title: Data Addition Failed ❌',
+          'Company Addition Failed ❌',
           'Failed to add the data. Please try again later or contact support for assistance.'
         )
       },

@@ -47,7 +47,6 @@ export const useQueryCompanies = () => {
     queryKey: ['companies'],
     queryFn: getCompanies,
     onSuccess: (data) => {
-      console.log('companies', data.data)
       setCompanies(data.data)
     },
     onError: (error: any) => {

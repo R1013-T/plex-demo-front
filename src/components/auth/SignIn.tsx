@@ -8,13 +8,12 @@ import {
   PasswordInput,
   TextInput,
 } from '@mantine/core'
-import { IconAt, IconKey, IconLogin, IconUserCheck } from '@tabler/icons-react'
+import { IconAt, IconKey, IconLogin } from '@tabler/icons-react'
 import { VscEye, VscEyeClosed } from 'react-icons/vsc'
 import { FiAlertOctagon } from 'react-icons/fi'
 import { useState } from 'react'
 import { signIn } from '@/lib/api/auth'
 import Cookies from 'js-cookie'
-import { useRouter } from 'next/router'
 import useStore from '@/hooks/useStore'
 import { useSignedInStore, useUserStore } from '@/store/auth'
 import { useLoadingStore } from '@/store/common'
@@ -24,8 +23,6 @@ import {
 } from '@/utils/notifications/auth'
 
 const SignIn = () => {
-  const router = useRouter()
-
   const signedStore = useStore(useSignedInStore, (state) => state)
   const user = useStore(useUserStore, (state) => state.user)
   const setLoading = useLoadingStore((state) => state.setLoading)
@@ -69,7 +66,6 @@ const SignIn = () => {
             `welcome back ${user?.name} !  You will be redirected to the dashboard`
           )
         }, 1)
-
       } else {
         setError('An unexpected error has occurred 🚨')
         errorNotification(

@@ -20,7 +20,7 @@ const Dashboard = () => {
   } else {
     return (
       <div>
-        {status === 'loading' || loading && <LoadingOverlay visible={true} />}
+        {status === 'loading' || loading && <LoadingOverlay visible={true} color="violet.4" />}
         {status === 'success' && (
           <>
             {detailId === 0 ? (

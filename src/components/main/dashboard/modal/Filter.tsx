@@ -23,7 +23,7 @@ type Props = {
   close: () => void
 }
 
-const Filter = (props:Props) => {
+const Filter = (props: Props) => {
   const [searchInputs, setSearchInputs] = useState<number>(0)
   const [marchType, setMarchType] = useState<string>('and')
   const setCompanies = useCompaniesStore((state) => state.setCompanies)
@@ -70,7 +70,7 @@ const Filter = (props:Props) => {
     // paramsとvaluesをそれぞれ配列に格納する
     if (!inputs.params) {
       queryClient.removeQueries(['companies'])
-      setSearchCompaniesParams({ match: "and", queries: {} })
+      setSearchCompaniesParams({ match: 'and', queries: {} })
       queryClient.invalidateQueries(['companies'])
       props.close()
       return
@@ -102,6 +102,7 @@ const Filter = (props:Props) => {
     queryClient.removeQueries(['companies'])
     setSearchCompaniesParams({ match: marchType, queries: query })
     queryClient.invalidateQueries(['companies'])
+    props.close()
   }
 
   return (
@@ -145,7 +146,7 @@ const Filter = (props:Props) => {
           </Radio.Group>
 
           <Button type="submit" className="block w-full bg-brand-primary">
-            Get {searchInputs === 0 ? "All" : "Search"} Companies
+            Get {searchInputs === 0 ? 'All' : 'Search'} Companies
           </Button>
         </div>
       </form>
