@@ -67,6 +67,9 @@ const EditNote = (props: Props) => {
         setIsUpdatedNote(true)
         props.close()
       },
+      onError: () => {
+        setLoading(false)
+      }
     })
   }
 

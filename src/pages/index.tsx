@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import useStore from '@/hooks/useStore'
 import Cookies from 'js-cookie'
-import { useQueryUser } from '@/hooks/user/useQueryUser'
+import { useQueryCurrentUser } from '@/hooks/user/useQueryCurrentUser'
 import { LoadingOverlay } from '@mantine/core'
 import { customLoader } from '@/utils/customLoader'
 import { useSignedInStore, useUserStore } from '@/store/auth'
@@ -16,7 +16,7 @@ export default function Home() {
   const updateUser = useUserStore((state) => state.updateUser)
   const signedInStore = useStore(useSignedInStore, (state) => state)
 
-  const { data: currentUser, status } = useQueryUser()
+  const { data: currentUser, status } = useQueryCurrentUser()
 
   useEffect(() => {
     if (status != 'success') return

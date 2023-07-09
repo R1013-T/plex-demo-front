@@ -38,7 +38,7 @@ export const useMutateNote = () => {
           )
         }
         successDatabaseNotification(
-          'Company Addition Successful ✅',
+          'Note Data Addition Successful ✅',
           'The company data has been successfully added. The changes you made have been saved successfully.'
         )
       },
@@ -47,7 +47,7 @@ export const useMutateNote = () => {
           signedInStore?.setSignedIn(false)
         }
         errorDatabaseNotification(
-          'Data Addition Failed ❌',
+          'Note Data Addition Failed ❌',
           'Failed to add the data. Please try again later or contact support for assistance.'
         )
       },
@@ -66,14 +66,14 @@ export const useMutateNote = () => {
         const previousNotes = QueryClient.getQueryData<any>(['notes'])
         if (previousNotes) {
           QueryClient.setQueriesData<Company[]>(
-            ['companies'],
-            previousNotes.map((company: Company) =>
-              company.id === variables.id ? res : company
+            ['notes'],
+            previousNotes.map((note: Note) =>
+              note.id === variables.id ? res : note
             )
           )
         }
         successDatabaseNotification(
-          'Data Update Successful ✅',
+          'Note Data Update Successful ✅',
           'The data has been successfully updated. The changes you made have been saved successfully.'
         )
       },
@@ -82,7 +82,7 @@ export const useMutateNote = () => {
           signedInStore?.setSignedIn(false)
         }
         errorDatabaseNotification(
-          'Data Update Failed ❌',
+          'Note Data Update Failed ❌',
           'Failed to update the data. Please try again later or contact support for assistance.'
         )
       },

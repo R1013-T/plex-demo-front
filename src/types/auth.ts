@@ -14,6 +14,13 @@ export enum Role {
   Other = 'other',
 }
 
+export enum Permission {
+  admin = 'admin',
+  editor = 'editor',
+  viewer = 'viewer',
+  guest = 'guest',
+}
+
 export type SignIn = {
   email: string
   password: string

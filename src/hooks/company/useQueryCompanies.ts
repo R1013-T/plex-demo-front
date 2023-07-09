@@ -17,20 +17,6 @@ export const useQueryCompanies = () => {
   )
 
   const getCompanies = async () => {
-    // const matchType = 'or' // AND検索の場合は 'and' に変更
-    // const searchParams = {
-    //   // match: matchType,
-    //   // queries: {
-    //   //   id_eq: 1,
-    //   //   id_gteq: '5',
-    //   //   // 検索条件を追加
-    //   // },
-    //   match: "and",
-    //   queries: {
-    //     id_gteq: 5,
-    //   }
-    // }
-
     const { data, headers } = await client.get('/companies/search', {
       params: { q: searchCompaniesParams },
       headers: {
